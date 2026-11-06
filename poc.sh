@@ -23,7 +23,7 @@ run() {
   echo "=== $MODE (memory_limit=$LIM) ==="
   php -d memory_limit="$LIM" /project/vendor/bin/php-cs-fixer fix /tmp/proj --dry-run --rules=@PSR12 $FLAG >/tmp/o.txt 2>&1
   echo "  exit=$?  (0=clean/no-violations, 8=violations-found, other=error)"
-  grep -iE "memory|fatal|worker|exhausted" /tmp/o.txt | head -2
+  grep -iE "memory|fatal|worker|exhausted" /tmp/o.txt | head -4
   echo "  files the run reported it would fix: $(grep -cE '^ +[0-9]+\)' /tmp/o.txt)"
 }
 

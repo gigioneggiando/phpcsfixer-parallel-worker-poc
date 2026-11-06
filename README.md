@@ -25,5 +25,19 @@ docker run --rm phpcsfixer-worker-poc
 `poc.sh` builds the input (14 clean PSR-12 files + one file with a huge flat literal array that
 exhausts a worker's memory) and runs both modes. `sample-run.log` is a captured run.
 
-Pinned to php-cs-fixer `945e6d8` (`dev-master`) where this was reproduced; bump the `COMMIT` build-arg
-to test another ref. Reported by [@gigioneggiando](https://github.com/gigioneggiando).
+Pinned to php-cs-fixer `945e6d8` (`dev-master`) where this was reproduced.
+
+## Testing another ref (e.g. a fix from a pull request)
+
+Override the `VERSION` build-arg, and `REPOSITORY` when the ref lives in a fork (it is cloned over HTTPS,
+so no GitHub token is needed):
+
+```sh
+docker build -t phpcsfixer-worker-poc \
+    --build-arg REPOSITORY=https://github.com/Wirone/PHP-CS-Fixer.git \
+    --build-arg VERSION=dev-codito/9854-oom-in-parallel-worker .
+docker run --rm phpcsfixer-worker-poc
+```
+
+A fixed php-cs-fixer makes **PARALLEL** exit non-zero with `Worker process exited unexpectedly`, like
+**SEQUENTIAL** does. Reported by [@gigioneggiando](https://github.com/gigioneggiando).
